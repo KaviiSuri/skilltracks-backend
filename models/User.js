@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
         },
         progress: [
           {
-            type: mongoose.mongo.Types.ObjectId,
+            type: mongoose.Types.ObjectId,
             ref: "Step",
           },
         ],
