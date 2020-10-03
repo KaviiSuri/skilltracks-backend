@@ -1,63 +1,63 @@
-const router = require('express').Router()
-const auth = require('../middlewares/auth')
-const User = require('../models/User')
+const router = require("express").Router();
+const auth = require("../middlewares/auth");
+const User = require("../models/User");
 
-router.post('/login', async(req, res) => {
+router.post("/login", async (req, res) => {
   try {
-    let user = await User.findByCredentials(req.body.email, req.body.password)
-    const authToken = await user.generateAuthToken()
-    user = user.toJSON()
-    res.status(200)
+    let user = await User.findByCredentials(req.body.email, req.body.password);
+    const authToken = await user.generateAuthToken();
+    user = user.toJSON();
+    res.status(200);
     res.json({
       user,
-      authToken
-    })
+      authToken,
+    });
   } catch (error) {
     res.status(401).json({
       error: true,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-})
+});
 
-router.post('/register', async(req, res) => {
+router.post("/register", async (req, res) => {
   try {
     let user = await User.create({
-      username: req.body.username,
+      name: req.body.name,
       email: req.body.email,
       password: req.body.password,
-      gender: req.body.gender,
-      dob: req.body.dob,
-      category: req.body.category
-    })
-    const authToken = await user.generateAuthToken()
-    user = user.toJSON()
-    res.status(201)
+    });
+    const authToken = await user.generateAuthToken();
+    user = user.toJSON();
+    res.status(201);
     res.json({
       user,
-      authToken
-    })
+      authToken,
+    });
   } catch (error) {
     res.status(401).json({
       error: true,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-})
+});
 
-router.get('/', auth, async(req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const user = req.user.toJSON()
+    // const user = req.user.toJSON();
+    const user = User.findById(req.user._id).populate(
+      "currentTracks.track",
+      "name _id"
+    );
     res.status(200).json({
-      ...user
-    })
+      ...user,
+    });
   } catch (error) {
     res.status(401).json({
       error: true,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
+});
 
-})
-
-module.exports = router
+module.exports = router;

@@ -17,7 +17,7 @@ const stepSchema = new mongoose.Schema({
           /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
           "invalid url for the resource",
         ],
-        required: [True, "link is required"],
+        required: [true, "link is required"],
       },
     },
   ],
@@ -30,10 +30,10 @@ const stepSchema = new mongoose.Schema({
           /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
           "invalid url for the resource",
         ],
-        required: [True, "link is required"],
+        required: [true, "link is required"],
       },
     },
   ],
 });
 
-module.exports = Step = mongoose.Model("Step", stepSchema);
+module.exports = Step = mongoose.model("Step", stepSchema);
