@@ -20,6 +20,20 @@ const userSchema = new mongoose.Schema(
       match: [/^[a-zA-Z0-9]+$/, "is invalid"],
       required: [true, "is required"],
     },
+    currentTracks: [
+      {
+        track: {
+          type: mongoose.Types.ObjectId,
+          ref: "Track",
+        },
+        progress: [
+          {
+            type: mongoose.mongo.Types.ObjectId,
+            ref: "Step",
+          },
+        ],
+      },
+    ],
   },
   {
     timestamps: true,
