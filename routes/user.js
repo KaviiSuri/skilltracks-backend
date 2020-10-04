@@ -7,6 +7,7 @@ router.post("/login", async (req, res) => {
     let user = await User.findByCredentials(req.body.email, req.body.password);
     const authToken = await user.generateAuthToken();
     user = user.toJSON();
+    delete user.password;
     res.status(200);
     res.json({
       user,
@@ -45,12 +46,14 @@ router.post("/register", async (req, res) => {
 router.get("/", auth, async (req, res) => {
   try {
     // const user = req.user.toJSON();
-    const user = User.findById(req.user._id).populate(
+    const user = await User.findById(req.user._id).populate(
       "currentTracks.track",
       "name _id"
     );
+    console.log(user);
+    delete user._doc.password;
     res.status(200).json({
-      ...user,
+      ...user._doc,
     });
   } catch (error) {
     res.status(401).json({

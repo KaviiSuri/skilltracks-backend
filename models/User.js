@@ -1,7 +1,24 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const currTrackSchema = new mongoose.Schema(
+  {
+    track: {
+      type: mongoose.Types.ObjectId,
+      ref: "Track",
+    },
+    progress: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Step",
+      },
+    ],
+  },
+  {
+    _id: false,
+    timestamps: true,
+  }
+);
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -20,20 +37,7 @@ const userSchema = new mongoose.Schema(
       match: [/^[a-zA-Z0-9]+$/, "is invalid"],
       required: [true, "is required"],
     },
-    currentTracks: [
-      {
-        track: {
-          type: mongoose.Types.ObjectId,
-          ref: "Track",
-        },
-        progress: [
-          {
-            type: mongoose.Types.ObjectId,
-            ref: "Step",
-          },
-        ],
-      },
-    ],
+    currentTracks: [currTrackSchema],
   },
   {
     timestamps: true,
@@ -57,6 +61,15 @@ userSchema.methods.toJSON = function () {
   const userObj = user.toObject();
   delete userObj.password;
   return userObj;
+};
+
+userSchema.methods.followNewTrack = async function (track) {
+  const user = this;
+  user.currentTracks.push({
+    track: track,
+    progress: [],
+  });
+  return user.save();
 };
 
 userSchema.statics.findByCredentials = async function (email, passowrd) {
